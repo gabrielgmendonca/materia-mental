@@ -14,6 +14,11 @@ const Vibration = {
 
 let vibration = Vibration.NONE;
 
+// Setup mobile controls when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  setupMobileControls();
+});
+
 function setup() {
   // Create responsive canvas
   let canvasWidth = windowWidth;
@@ -41,9 +46,6 @@ function setup() {
   w1 = color(255, 0, 0);
   w2 = color(59, 163, 24);
   w3 = color(159, 0, 255);
-  
-  // Setup mobile controls
-  setupMobileControls();
 }
 
 function windowResized() {
@@ -67,14 +69,36 @@ function windowResized() {
 function setupMobileControls() {
   // Setup touch controls for mobile
   const buttons = document.querySelectorAll('.mode-btn');
+  
+  if (buttons.length === 0) {
+    console.log('Botões não encontrados, tentando novamente...');
+    setTimeout(setupMobileControls, 100);
+    return;
+  }
+  
   buttons.forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    // Remove listeners antigos se existirem
+    btn.replaceWith(btn.cloneNode(true));
+  });
+  
+  // Re-seleciona os botões após clonar
+  const newButtons = document.querySelectorAll('.mode-btn');
+  
+  newButtons.forEach(btn => {
+    // Usa tanto click quanto touchend para melhor compatibilidade
+    const handleInteraction = function(e) {
       e.preventDefault();
+      e.stopPropagation();
       const mode = parseInt(this.getAttribute('data-mode'));
       setVibrationMode(mode);
       updateActiveButton(mode);
-    });
+    };
+    
+    btn.addEventListener('touchend', handleInteraction, { passive: false });
+    btn.addEventListener('click', handleInteraction);
   });
+  
+  console.log('Controles mobile configurados com sucesso!');
 }
 
 function updateActiveButton(mode) {
