@@ -20,24 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setup() {
-  // Create responsive canvas
-  let canvasWidth = windowWidth;
-  let canvasHeight = windowHeight;
-  
-  // Maintain aspect ratio 16:9 while fitting screen
-  const targetRatio = 16 / 9;
-  const screenRatio = canvasWidth / canvasHeight;
-  
-  if (screenRatio > targetRatio) {
-    canvasWidth = canvasHeight * targetRatio;
-  } else {
-    canvasHeight = canvasWidth / targetRatio;
-  }
-  
-  createCanvas(canvasWidth, canvasHeight);
+  // Create responsive canvas that fills the screen
+  createCanvas(windowWidth, windowHeight);
   
   // Calculate scale factor for responsive sizing
-  scaleFactor = width / 1280;
+  // Use the smaller dimension to ensure everything fits
+  scaleFactor = min(width / 1280, height / 720);
   
   // Initialize colors
   e1 = color(255, 100, 100);
@@ -50,20 +38,8 @@ function setup() {
 
 function windowResized() {
   // Recalculate canvas size on window resize
-  let canvasWidth = windowWidth;
-  let canvasHeight = windowHeight;
-  
-  const targetRatio = 16 / 9;
-  const screenRatio = canvasWidth / canvasHeight;
-  
-  if (screenRatio > targetRatio) {
-    canvasWidth = canvasHeight * targetRatio;
-  } else {
-    canvasHeight = canvasWidth / targetRatio;
-  }
-  
-  resizeCanvas(canvasWidth, canvasHeight);
-  scaleFactor = width / 1280;
+  resizeCanvas(windowWidth, windowHeight);
+  scaleFactor = min(width / 1280, height / 720);
 }
 
 function setupMobileControls() {
@@ -246,26 +222,30 @@ function drawWave() {
 function drawText() {
   fill(255);
   
-  // Responsive text sizing
-  let titleSize = 30 * scaleFactor;
-  let subtitleSize = 15 * scaleFactor;
-  let labelSize = 20 * scaleFactor;
-  let instructionSize = 15 * scaleFactor;
+  // Responsive text sizing based on screen dimensions
+  const isMobile = width < 768;
+  const baseScale = min(width / 1280, height / 720);
   
-  // Adjust for very small screens
-  if (width < 600) {
-    titleSize = max(18, titleSize);
-    subtitleSize = max(10, subtitleSize);
-    labelSize = max(14, labelSize);
-    instructionSize = max(10, instructionSize);
-  }
+  let titleSize = isMobile ? 24 : 30 * baseScale;
+  let subtitleSize = isMobile ? 12 : 15 * baseScale;
+  let labelSize = isMobile ? 16 : 20 * baseScale;
+  let instructionSize = isMobile ? 12 : 15 * baseScale;
+  
+  // Ensure minimum readable sizes
+  titleSize = max(16, titleSize);
+  subtitleSize = max(10, subtitleSize);
+  labelSize = max(12, labelSize);
+  instructionSize = max(10, instructionSize);
+  
+  // Title positioning - avoid buttons at bottom
+  const topMargin = isMobile ? 30 : 20;
   
   textSize(titleSize);
   textAlign(CENTER, CENTER);
-  text("Matéria Mental e Matéria Física", width / 2.0, 20 * scaleFactor);
+  text("Matéria Mental e Matéria Física", width / 2.0, topMargin);
   
   textSize(subtitleSize);
-  text("Livro \"Mecanismos da Mediunidade\", cap.IV", width / 2.0, 50 * scaleFactor);
+  text("Livro \"Mecanismos da Mediunidade\", cap.IV", width / 2.0, topMargin + titleSize + 10);
   
   let label = ""; 
   if (vibration === Vibration.ATOM) {
@@ -279,23 +259,22 @@ function drawText() {
   if (label !== "") {
     textSize(labelSize);
     
-    // Position label based on screen size
-    if (width < 768) {
-      // Mobile: position at top
-      text(label, width / 2.0, 80 * scaleFactor);
+    if (isMobile) {
+      // Mobile: position below subtitle, avoid hint at top
+      text(label, width / 2.0, topMargin + titleSize + subtitleSize + 35);
     } else {
       // Desktop: position at right
-      text(label, width * 0.75, 140 * scaleFactor);
+      text(label, width * 0.75, 140);
     }
   }
   
   // Hide instructions on mobile (we have buttons)
-  if (width >= 768) {
+  if (!isMobile) {
     textSize(instructionSize);
     textAlign(LEFT);
     text("Instruções:", width * 0.75, height * 0.9);
     text("Use as teclas 0, 1, 2, 3 para alternar \nentre os modos de vibração", 
-         width * 0.75, height * 0.9 + 30 * scaleFactor);
+         width * 0.75, height * 0.9 + 25);
   }
 }
 
