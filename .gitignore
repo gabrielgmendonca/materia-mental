@@ -1,0 +1,11 @@
+# Build directories
+macos-aarch64/
+windows-amd64/
+
+# Processing files (keeping only the web version)
+*.pde
+sketch.properties
+
+# OS files
+.DS_Store
+
