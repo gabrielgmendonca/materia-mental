@@ -4,7 +4,7 @@ Uma animação interativa baseada no capítulo IV do livro "Mecanismos da Mediun
 
 ## 🌟 Demonstração
 
-Visite a demonstração ao vivo: [GitHub Pages URL]
+Visite a demonstração ao vivo: **https://gabrielgmendonca.github.io/materia-mental/**
 
 ## 📖 Sobre
 
@@ -30,7 +30,7 @@ Pressione as teclas numéricas para alternar entre os modos de vibração:
 
 1. Clone este repositório:
 ```bash
-git clone https://github.com/seu-usuario/materia-mental.git
+git clone https://github.com/gabrielgmendonca/materia-mental.git
 cd materia-mental
 ```
 
