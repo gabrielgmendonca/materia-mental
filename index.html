@@ -5,8 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="description" content="Animação interativa sobre matéria mental baseada no livro Mecanismos da Mediunidade">
-  <title>Matéria Mental e Matéria Física</title>
+  
+  <!-- SEO -->
+  <title>Matéria Mental e Matéria Física - Mecanismos da Mediunidade</title>
+  <meta name="description" content="Animação interativa ilustrando os diferentes estados vibratórios da matéria mental, baseada no capítulo IV do livro Mecanismos da Mediunidade de André Luiz.">
+  <meta name="keywords" content="matéria mental, espiritismo, André Luiz, Mecanismos da Mediunidade, vibração átomo mental, animação interativa">
+  <meta name="author" content="Gabriel Mendonça">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gabrielgmendonca.github.io/materia-mental/">
+  <meta property="og:title" content="Matéria Mental e Matéria Física">
+  <meta property="og:description" content="Animação interativa ilustrando os diferentes estados vibratórios da matéria mental - baseada no livro Mecanismos da Mediunidade">
+  <meta property="og:locale" content="pt_BR">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://gabrielgmendonca.github.io/materia-mental/">
+  <meta property="twitter:title" content="Matéria Mental e Matéria Física">
+  <meta property="twitter:description" content="Animação interativa sobre vibrações da matéria mental - Mecanismos da Mediunidade">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23667eea'/><circle cx='50' cy='50' r='25' fill='%23764ba2'/></svg>">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
   <script src="materia_mental.js"></script>
   <style>
@@ -170,32 +191,32 @@
   <main></main>
   
   <!-- Mobile instruction hint -->
-  <div id="mobile-hint">
+  <div id="mobile-hint" role="status" aria-live="polite">
     👇 Toque nos botões para ver as vibrações
   </div>
   
   <!-- Mobile touch controls -->
-  <div id="mobile-controls">
-    <button class="mode-btn active" data-mode="0">
-      <span class="btn-number">0</span>
+  <div id="mobile-controls" role="toolbar" aria-label="Controles de modo de vibração">
+    <button class="mode-btn active" data-mode="0" aria-label="Modo normal - sem vibração" aria-pressed="true">
+      <span class="btn-number" aria-hidden="true">0</span>
       <span class="btn-label">Normal</span>
     </button>
-    <button class="mode-btn" data-mode="1">
-      <span class="btn-number">1</span>
+    <button class="mode-btn" data-mode="1" aria-label="Modo 1 - vibração do átomo mental" aria-pressed="false">
+      <span class="btn-number" aria-hidden="true">1</span>
       <span class="btn-label">Átomo</span>
     </button>
-    <button class="mode-btn" data-mode="2">
-      <span class="btn-number">2</span>
+    <button class="mode-btn" data-mode="2" aria-label="Modo 2 - vibração dos elétrons mentais" aria-pressed="false">
+      <span class="btn-number" aria-hidden="true">2</span>
       <span class="btn-label">Elétrons</span>
     </button>
-    <button class="mode-btn" data-mode="3">
-      <span class="btn-number">3</span>
+    <button class="mode-btn" data-mode="3" aria-label="Modo 3 - vibração do núcleo do átomo mental" aria-pressed="false">
+      <span class="btn-number" aria-hidden="true">3</span>
       <span class="btn-label">Núcleo</span>
     </button>
   </div>
   
   <!-- Keyboard hint for desktop -->
-  <div id="keyboard-hint">
+  <div id="keyboard-hint" role="status" aria-live="polite">
     ⌨️ Pressione 0-3 para alternar modos de vibração
   </div>
 </body>

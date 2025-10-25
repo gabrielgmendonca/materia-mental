@@ -34,12 +34,26 @@ function setup() {
   w1 = color(255, 0, 0);
   w2 = color(59, 163, 24);
   w3 = color(159, 0, 255);
+  
+  // Performance optimization for mobile
+  if (width < 768) {
+    frameRate(30); // Lower frame rate on mobile to save battery
+  } else {
+    frameRate(60); // Full frame rate on desktop
+  }
 }
 
 function windowResized() {
   // Recalculate canvas size on window resize
   resizeCanvas(windowWidth, windowHeight);
   scaleFactor = min(width / 1280, height / 720);
+  
+  // Adjust frame rate based on new size
+  if (width < 768) {
+    frameRate(30);
+  } else {
+    frameRate(60);
+  }
 }
 
 function setupMobileControls() {
@@ -80,10 +94,18 @@ function setupMobileControls() {
 function updateActiveButton(mode) {
   const buttons = document.querySelectorAll('.mode-btn');
   buttons.forEach(btn => {
-    btn.classList.remove('active');
-    if (parseInt(btn.getAttribute('data-mode')) === mode) {
+    const btnMode = parseInt(btn.getAttribute('data-mode'));
+    const isActive = btnMode === mode;
+    
+    // Visual state
+    if (isActive) {
       btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
     }
+    
+    // Accessibility state
+    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
 }
 
