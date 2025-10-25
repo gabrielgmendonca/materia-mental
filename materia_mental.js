@@ -2,6 +2,7 @@ let time;
 let e1, e2, e3;
 let w1, w2, w3;
 let theta = 0.0;
+let scaleFactor = 1;
 
 // Vibration enum equivalent
 const Vibration = {
@@ -14,7 +15,24 @@ const Vibration = {
 let vibration = Vibration.NONE;
 
 function setup() {
-  createCanvas(1280, 720);
+  // Create responsive canvas
+  let canvasWidth = windowWidth;
+  let canvasHeight = windowHeight;
+  
+  // Maintain aspect ratio 16:9 while fitting screen
+  const targetRatio = 16 / 9;
+  const screenRatio = canvasWidth / canvasHeight;
+  
+  if (screenRatio > targetRatio) {
+    canvasWidth = canvasHeight * targetRatio;
+  } else {
+    canvasHeight = canvasWidth / targetRatio;
+  }
+  
+  createCanvas(canvasWidth, canvasHeight);
+  
+  // Calculate scale factor for responsive sizing
+  scaleFactor = width / 1280;
   
   // Initialize colors
   e1 = color(255, 100, 100);
@@ -23,6 +41,67 @@ function setup() {
   w1 = color(255, 0, 0);
   w2 = color(59, 163, 24);
   w3 = color(159, 0, 255);
+  
+  // Setup mobile controls
+  setupMobileControls();
+}
+
+function windowResized() {
+  // Recalculate canvas size on window resize
+  let canvasWidth = windowWidth;
+  let canvasHeight = windowHeight;
+  
+  const targetRatio = 16 / 9;
+  const screenRatio = canvasWidth / canvasHeight;
+  
+  if (screenRatio > targetRatio) {
+    canvasWidth = canvasHeight * targetRatio;
+  } else {
+    canvasHeight = canvasWidth / targetRatio;
+  }
+  
+  resizeCanvas(canvasWidth, canvasHeight);
+  scaleFactor = width / 1280;
+}
+
+function setupMobileControls() {
+  // Setup touch controls for mobile
+  const buttons = document.querySelectorAll('.mode-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const mode = parseInt(this.getAttribute('data-mode'));
+      setVibrationMode(mode);
+      updateActiveButton(mode);
+    });
+  });
+}
+
+function updateActiveButton(mode) {
+  const buttons = document.querySelectorAll('.mode-btn');
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if (parseInt(btn.getAttribute('data-mode')) === mode) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+function setVibrationMode(mode) {
+  switch(mode) {
+    case 0:
+      vibration = Vibration.NONE;
+      break;
+    case 1:
+      vibration = Vibration.ATOM;
+      break;
+    case 2:
+      vibration = Vibration.ELETRON;
+      break;
+    case 3:
+      vibration = Vibration.NUCLEUS;
+      break;
+  }
 }
 
 function drawNucleus() {
@@ -142,12 +221,27 @@ function drawWave() {
 
 function drawText() {
   fill(255);
-  textSize(30);
-  textAlign(CENTER, CENTER);
-  text("Matéria Mental e Matéria Física", width / 2.0, 20);
   
-  textSize(15);
-  text("Livro \"Mecanismos da Mediunidade\", cap.IV", width / 2.0, 50);
+  // Responsive text sizing
+  let titleSize = 30 * scaleFactor;
+  let subtitleSize = 15 * scaleFactor;
+  let labelSize = 20 * scaleFactor;
+  let instructionSize = 15 * scaleFactor;
+  
+  // Adjust for very small screens
+  if (width < 600) {
+    titleSize = max(18, titleSize);
+    subtitleSize = max(10, subtitleSize);
+    labelSize = max(14, labelSize);
+    instructionSize = max(10, instructionSize);
+  }
+  
+  textSize(titleSize);
+  textAlign(CENTER, CENTER);
+  text("Matéria Mental e Matéria Física", width / 2.0, 20 * scaleFactor);
+  
+  textSize(subtitleSize);
+  text("Livro \"Mecanismos da Mediunidade\", cap.IV", width / 2.0, 50 * scaleFactor);
   
   let label = ""; 
   if (vibration === Vibration.ATOM) {
@@ -158,14 +252,27 @@ function drawText() {
     label = "Vibração do núcleo do átomo mental";
   }
   
-  textSize(20);
-  text(label, width * 0.75, 140);
+  if (label !== "") {
+    textSize(labelSize);
+    
+    // Position label based on screen size
+    if (width < 768) {
+      // Mobile: position at top
+      text(label, width / 2.0, 80 * scaleFactor);
+    } else {
+      // Desktop: position at right
+      text(label, width * 0.75, 140 * scaleFactor);
+    }
+  }
   
-  textSize(15);
-  textAlign(LEFT);
-  text("Instruções:", width * 0.75, height * 0.9);
-  text("Use as teclas 0, 1, 2, 3 para alternar \nentre os modos de vibração", 
-       width * 0.75, height * 0.9 + 30);
+  // Hide instructions on mobile (we have buttons)
+  if (width >= 768) {
+    textSize(instructionSize);
+    textAlign(LEFT);
+    text("Instruções:", width * 0.75, height * 0.9);
+    text("Use as teclas 0, 1, 2, 3 para alternar \nentre os modos de vibração", 
+         width * 0.75, height * 0.9 + 30 * scaleFactor);
+  }
 }
 
 function draw() {
@@ -195,26 +302,37 @@ function draw() {
 }
 
 function keyPressed() {
+  let mode = -1;
+  
   switch (key) {
     case '0':
       vibration = Vibration.NONE;
+      mode = 0;
       break;
 
     case '1':
       vibration = Vibration.ATOM;
+      mode = 1;
       break;
 
     case '2':
       vibration = Vibration.ELETRON;
+      mode = 2;
       break;
 
     case '3':
       vibration = Vibration.NUCLEUS;
+      mode = 3;
       break;
       
     default:
       vibration = Vibration.NONE;
+      mode = 0;
       break;
+  }
+  
+  if (mode !== -1) {
+    updateActiveButton(mode);
   }
 }
 
